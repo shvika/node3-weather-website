@@ -41,8 +41,29 @@ app.get('/help', (req,res) => {
     })
 })
 
+app.get('/weather-by-coordinates', (req, res) =>{
+  if (!req.query.longitude || !req.query.latitude){
+    return res.send({
+      error: 'You must provide longitude and latitude'
+    })
+  }
 
-app.get('/weather', (req, res) =>{
+  forecast(req.query.longitude, req.query.latitude, (error, forecastData) => {
+    if (error)
+    {
+      return res.send({
+        error: 'Error occured while trying to fetch forecast  for the given location' 
+      })
+    }
+
+    return res.send({
+      forecast: forecastData,
+    })
+  })
+})
+
+
+app.get('/weather-by-text', (req, res) =>{
   if (!req.query.address){
     return res.send({
       error: 'You must provide an address'
